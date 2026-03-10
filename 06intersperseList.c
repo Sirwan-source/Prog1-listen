@@ -71,32 +71,39 @@ int getListSize(IntList *head)
 }
 
 // intersperse([1, 2, 3], -3) = [1, -3, 2, -3, 3]
-IntList *interperseList(IntList *head, int n){
+// Fügt den Wert 'n' zwischen alle Elemente der Liste ein.
+IntList *interperseList(IntList *head, int n) {
     
+    // 1. Der allerwichtigste Testfall (aus der Aufgabenstellung):
+    // Wenn die übergebene Liste leer ist, gib NULL zurück.
+    if (head == NULL) {
+        return NULL;
+    }
+
+    // 2. Den "Anker" und "Greifarm" für die neue Liste vorbereiten.
+    // Das erste Element der alten Liste übernehmen wir direkt, 
+    // denn VOR dem ersten Element soll ja kein 'n' stehen!
+    IntList *result_head = newNode(head->data);
+    IntList *result_tail = result_head;
+
+    // 3. Den Motor starten: Wir wandern durch den REST der Original-Liste
+    IntList *current = head->next; 
+    
+    while (current != NULL) {
+        // A) Zuerst das Trennzeichen 'n' in die neue Liste einhängen
+        result_tail->next = newNode(n);
+        result_tail = result_tail->next; // Greifarm weiterschieben
+
+        // B) Danach das eigentliche Element aus der Original-Liste einhängen
+        result_tail->next = newNode(current->data);
+        result_tail = result_tail->next; // Greifarm weiterschieben
+
+        // C) In der Original-Liste einen Schritt weitergehen
+        current = current->next;
+    }
+
+    return result_head;
 }
-// {
-//     IntList *result = NULL;
-//     int listSize = getListSize(head);
-//     if (listSize == 0)
-//     {
-//         return NULL;
-//     }
-//     int i = 0;
-//     while (head != NULL)
-//     {
-//         if (i % 2 == 0)
-//         {
-//             push(&result, head->data);
-//             head = head->next;
-//         }
-//         else
-//         {
-//             push(&result, n);
-//         }
-//         i++;
-//     }
-//     return result;
-// }
 
 void pop(IntList **head)
 {

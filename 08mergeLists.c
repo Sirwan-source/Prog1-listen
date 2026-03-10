@@ -52,20 +52,32 @@ IntList *append(IntList *head, int data)
     return temp;
 }
 
-IntList *mergeLists(IntList *list1, IntList *list2)
-{
-    IntList *result = NULL;
-    while (list1 != NULL)
-    {
-        push(&result, list1->data);
-        while (list2 != NULL)
-        {
-            push(&result, list2->data);
-            list2 = list2->next;
-        }
-        list1 = list1->next;
+// Hängt list2 an das Ende von list1 an und gibt den neuen Kopf zurück.
+IntList *mergeLists(IntList *list1, IntList *list2) {
+    
+    
+    if (list1 == NULL) {
+        return list2;
     }
-    return result;
+    
+    // Wenn Liste 2 leer ist, ändert sich an Liste 1 gar nichts.
+    if (list2 == NULL) {
+        return list1;
+    }
+
+    
+    IntList *current = list1;
+
+    
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    // 3. Die Waggon-Kupplung: Das Ende von Liste 1 zeigt jetzt auf den Anfang von Liste 2
+    current->next = list2;
+
+    // Der Kopf der ersten Liste ist jetzt der Kopf des riesigen, langen Zuges.
+    return list1;
 }
 
 int getListSize(IntList *head)
