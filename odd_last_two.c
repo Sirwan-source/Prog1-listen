@@ -32,31 +32,38 @@ void print_list(List* list) {
 // TODO: Die Funktion soll die letzten beiden ungeraden Zahlen in einer Liste identifizieren, wobei die Reihenfolge ihres Auftretens beibehalten wird.
 int odd_last_two(List* list, int* out) {
     int count = 0;
-    if(list == NULL) return 0;
-    for(List* list1 = list; list1 != NULL; list1 = list1 -> next){
-        if(list1->value % 2 != 0){
-            if(count == 0) {
-                out[count] = list1 -> value;
-                count++;
-            }else if(count == 1) {
-                out[count] = list1 -> value;
-                
-             } else {
-                out[0] = out[1];
-                out[1] = list1 -> value;
-             }
-             
-            }
-        }
+    int letze_ungerade = 0;
+    int vorletzte_ungerade = 0;
 
-        if(count == 0){
-            return 0;
-        }else if(count == 1){
-            return out[0];
+    // Unser altbekannter Listen-Motor
+    for (List* n = list; n != NULL; n = n->next) {
+        
+        // Ist die Zahl ungerade? (Rest bei Division durch 2 ist nicht 0)
+        if (n->value % 2 != 0) {
+            
+            // Das Fließband: Die bisher letzte wird zur vorletzten...
+            vorletzte_ungerade = letze_ungerade;
+            // ...und die neu gefundene wird zur neuen letzten.
+            letze_ungerade = n->value;
+            
+            count++; // Wir haben eine ungerade Zahl gefunden, also mitzählen!
         }
-        return out[1];
     }
-    
+
+    // Nach der Schleife werten wir aus, was wir gefunden haben:
+    if (count == 0) {
+        return 0; 
+    } else if (count == 1) {
+        // Nur eine gefunden: Kommt an die erste Stelle im out-Array
+        out[0] = letze_ungerade;
+        return 1;
+    } else {
+        // Zwei oder mehr gefunden: Wir geben unsere beiden gemerkten Werte zurück
+        out[0] = vorletzte_ungerade;
+        out[1] = letze_ungerade;
+        return 2;
+    }
+}
 
 
 int main() {
@@ -75,7 +82,7 @@ int main() {
     List* list_2 = prepend(7,NULL);
     printf("Input: ");
     print_list(list_2);
-    test_equal_i(odd_last_two(list_2, out), 7);
+    test_equal_i(odd_last_two(list_2, out), 1);
     test_equal_i(out[0], 7);
     printf("Output: ");
     printialn(out, 1);
